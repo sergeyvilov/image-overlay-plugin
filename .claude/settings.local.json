@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -E '\\\\.\\(md|txt|json|yaml|yml\\)$')",
+      "Bash(wc:*)",
+      "Bash(grep -r \"display\\\\|render\\\\|canvas\\\\|webgl\\\\|img\\\\|image\" /Users/sergeyvilov/Documents/image-plugin --include=*.js --include=*.css -n)"
+    ]
+  }
+}

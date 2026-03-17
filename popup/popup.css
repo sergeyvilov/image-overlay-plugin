@@ -1,0 +1,40 @@
+.popup {
+  width: 220px;
+  padding: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+}
+
+.upload-btn {
+  display: block;
+  text-align: center;
+  padding: 8px;
+  background: #0060df;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+.upload-btn:hover {
+  background: #003eaa;
+}
+
+.slider-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slider-group label {
+  flex-shrink: 0;
+}
+
+#opacity-slider {
+  flex: 1;
+}
+
+#opacity-value {
+  width: 36px;
+  text-align: right;
+}
