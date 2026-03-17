@@ -27,20 +27,34 @@
     document.body.appendChild(overlay);
     console.log("[Image Overlay] Overlay added to DOM");
 
+    // Apply persisted opacity
+    browser.storage.local.get("opacity").then((data) => {
+      if (data.opacity != null) overlay.style.opacity = data.opacity;
+    });
+
     img.onload = () => {
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const targetArea = (vw * vh) / 2;
-      const aspect = img.naturalWidth / img.naturalHeight;
-      let w = Math.sqrt(targetArea * aspect);
-      let h = w / aspect;
-      const pad = 40;
-      if (w > vw - pad) { w = vw - pad; h = w / aspect; }
-      if (h > vh - pad) { h = vh - pad; w = h * aspect; }
-      overlay.style.width = w + "px";
-      overlay.style.height = h + "px";
-      overlay.style.left = (vw - w) / 2 + "px";
-      overlay.style.top = (vh - h) / 2 + "px";
+      browser.storage.local.get("imageSize").then((data) => {
+        let w, h;
+        if (data.imageSize && data.imageSize !== "auto") {
+          const parts = data.imageSize.split("x");
+          w = parseInt(parts[0], 10);
+          h = parseInt(parts[1], 10);
+        } else {
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
+          const targetArea = (vw * vh) / 2;
+          const aspect = img.naturalWidth / img.naturalHeight;
+          w = Math.sqrt(targetArea * aspect);
+          h = w / aspect;
+          const pad = 40;
+          if (w > vw - pad) { w = vw - pad; h = w / aspect; }
+          if (h > vh - pad) { h = vh - pad; w = h * aspect; }
+        }
+        overlay.style.width = w + "px";
+        overlay.style.height = h + "px";
+        overlay.style.left = (window.innerWidth - w) / 2 + "px";
+        overlay.style.top = (window.innerHeight - h) / 2 + "px";
+      });
     };
 
     setupDrag(overlay, img);
@@ -179,6 +193,33 @@
       createOverlay(msg.dataUrl);
     } else if (msg.action === "setOpacity") {
       if (overlay) overlay.style.opacity = msg.opacity;
+    } else if (msg.action === "setSize") {
+      if (overlay) {
+        if (msg.width && msg.height) {
+          overlay.style.width = msg.width + "px";
+          overlay.style.height = msg.height + "px";
+          overlay.style.left = (window.innerWidth - msg.width) / 2 + "px";
+          overlay.style.top = (window.innerHeight - msg.height) / 2 + "px";
+        } else {
+          // Revert to auto-sizing based on the current image
+          const img = overlay.querySelector(".image-overlay-img");
+          if (img) {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const targetArea = (vw * vh) / 2;
+            const aspect = img.naturalWidth / img.naturalHeight;
+            let w = Math.sqrt(targetArea * aspect);
+            let h = w / aspect;
+            const pad = 40;
+            if (w > vw - pad) { w = vw - pad; h = w / aspect; }
+            if (h > vh - pad) { h = vh - pad; w = h * aspect; }
+            overlay.style.width = w + "px";
+            overlay.style.height = h + "px";
+            overlay.style.left = (vw - w) / 2 + "px";
+            overlay.style.top = (vh - h) / 2 + "px";
+          }
+        }
+      }
     } else if (msg.action === "removeImage") {
       if (overlay) {
         overlay.remove();

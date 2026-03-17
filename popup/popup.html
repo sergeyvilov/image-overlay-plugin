@@ -7,12 +7,26 @@
 <body>
   <div class="popup">
     <button id="upload-btn" class="upload-btn">Upload Image</button>
+    <div class="select-group">
+      <label for="size-select">Size</label>
+      <select id="size-select">
+        <option value="auto">Auto</option>
+        <option value="2560x1440">2560×1440</option>
+        <option value="1920x1080">1920×1080</option>
+        <option value="1728x1117">1728×1117</option>
+        <option value="1440x900">1440×900</option>
+        <option value="768x1024">768×1024</option>
+        <option value="568x320">568×320</option>
+        <option value="357x667">357×667</option>
+      </select>
+    </div>
     <div class="slider-group">
       <label for="opacity-slider">Opacity</label>
       <input type="range" id="opacity-slider" min="0" max="100" value="100">
       <span id="opacity-value">100%</span>
     </div>
   </div>
+  <script src="../browser-polyfill.min.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

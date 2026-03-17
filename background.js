@@ -1,5 +1,5 @@
 browser.runtime.onMessage.addListener((msg, sender) => {
-  if (msg.action === "openFilePicker" || msg.action === "setOpacity") {
+  if (msg.action === "openFilePicker" || msg.action === "setOpacity" || msg.action === "setSize") {
     browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
       if (tabs.length) {
         browser.tabs.sendMessage(tabs[0].id, msg);
