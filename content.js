@@ -8,25 +8,43 @@
 
     overlay = document.createElement("div");
     overlay.className = "image-overlay-wrapper";
-    overlay.style.left = "50px";
-    overlay.style.top = "50px";
-    overlay.style.width = "300px";
 
     const img = document.createElement("img");
     img.src = dataUrl;
     img.className = "image-overlay-img";
     img.draggable = false;
 
-    const handle = document.createElement("div");
-    handle.className = "image-overlay-resize-handle";
-
     overlay.appendChild(img);
-    overlay.appendChild(handle);
+
+    const edges = ["top", "bottom", "left", "right", "top-left", "top-right", "bottom-left", "bottom-right"];
+    edges.forEach((edge) => {
+      const h = document.createElement("div");
+      h.className = "image-overlay-handle image-overlay-handle-" + edge;
+      h.dataset.edge = edge;
+      overlay.appendChild(h);
+    });
+
     document.body.appendChild(overlay);
     console.log("[Image Overlay] Overlay added to DOM");
 
+    img.onload = () => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const targetArea = (vw * vh) / 2;
+      const aspect = img.naturalWidth / img.naturalHeight;
+      let w = Math.sqrt(targetArea * aspect);
+      let h = w / aspect;
+      const pad = 40;
+      if (w > vw - pad) { w = vw - pad; h = w / aspect; }
+      if (h > vh - pad) { h = vh - pad; w = h * aspect; }
+      overlay.style.width = w + "px";
+      overlay.style.height = h + "px";
+      overlay.style.left = (vw - w) / 2 + "px";
+      overlay.style.top = (vh - h) / 2 + "px";
+    };
+
     setupDrag(overlay, img);
-    setupResize(overlay, handle, img);
+    setupResize(overlay);
   }
 
   function setupDrag(wrapper, img) {
@@ -51,26 +69,54 @@
     });
   }
 
-  function setupResize(wrapper, handle, img) {
+  function setupResize(wrapper) {
     let resizing = false;
-    let startX, startY, startW, startH;
+    let edge, startX, startY, startW, startH, startLeft, startTop;
 
-    handle.addEventListener("mousedown", (e) => {
+    wrapper.addEventListener("mousedown", (e) => {
+      if (!e.target.dataset.edge) return;
       resizing = true;
+      edge = e.target.dataset.edge;
       startX = e.clientX;
       startY = e.clientY;
-      startW = wrapper.getBoundingClientRect().width;
-      startH = wrapper.getBoundingClientRect().height;
+      const rect = wrapper.getBoundingClientRect();
+      startW = rect.width;
+      startH = rect.height;
+      startLeft = rect.left;
+      startTop = rect.top;
       e.preventDefault();
       e.stopPropagation();
     });
 
     document.addEventListener("mousemove", (e) => {
       if (!resizing) return;
-      const newW = startW + (e.clientX - startX);
-      const newH = startH + (e.clientY - startY);
-      wrapper.style.width = Math.max(50, newW) + "px";
-      wrapper.style.height = Math.max(50, newH) + "px";
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+
+      let newW = startW, newH = startH, newLeft = startLeft, newTop = startTop;
+
+      if (edge.includes("left")) {
+        newW = startW - dx;
+        newLeft = startLeft + dx;
+      }
+      if (edge.includes("right")) {
+        newW = startW + dx;
+      }
+      if (edge.startsWith("top")) {
+        newH = startH - dy;
+        newTop = startTop + dy;
+      }
+      if (edge.includes("bottom")) {
+        newH = startH + dy;
+      }
+
+      if (newW < 50) { newW = 50; if (edge.includes("left")) newLeft = startLeft + startW - 50; }
+      if (newH < 50) { newH = 50; if (edge.startsWith("top")) newTop = startTop + startH - 50; }
+
+      wrapper.style.width = newW + "px";
+      wrapper.style.height = newH + "px";
+      wrapper.style.left = newLeft + "px";
+      wrapper.style.top = newTop + "px";
     });
 
     document.addEventListener("mouseup", () => {
