@@ -68,4 +68,4 @@ image-plugin/
 
 ## Browser compatibility
 
-Built for **Firefox** using WebExtension Manifest V2. Works in **Chrome** via the bundled `browser-polyfill.min.js` (Mozilla WebExtension Polyfill v0.12.0), which maps the `browser.*` API to Chrome's `chrome.*` namespace.
+Built with WebExtension **Manifest V3**. Works in both **Chrome** and **Firefox**. Uses the bundled `browser-polyfill.min.js` (Mozilla WebExtension Polyfill v0.12.0) to provide a unified `browser.*` API across browsers.

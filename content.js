@@ -148,18 +148,32 @@
     backdrop.id = "image-overlay-filepicker";
     backdrop.className = "image-overlay-filepicker-backdrop";
 
-    const label = document.createElement("label");
-    label.className = "image-overlay-filepicker-label";
-    label.textContent = "Click to select an image";
+    const card = document.createElement("div");
+    card.className = "image-overlay-filepicker-card";
+
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "image-overlay-filepicker-close";
+    closeBtn.textContent = "\u00D7";
+
+    const text = document.createElement("p");
+    text.className = "image-overlay-filepicker-text";
+    text.textContent = "Select an image to overlay";
 
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
     input.className = "image-overlay-filepicker-input";
 
+    const btn = document.createElement("button");
+    btn.className = "image-overlay-filepicker-btn";
+    btn.textContent = "Choose file";
+    btn.addEventListener("click", () => input.click());
+
     function cleanup() {
       backdrop.remove();
     }
+
+    closeBtn.addEventListener("click", cleanup);
 
     input.addEventListener("change", () => {
       const file = input.files[0];
@@ -174,13 +188,16 @@
       }
     });
 
-    // Dismiss on clicking the backdrop (but not the label)
+    // Dismiss on clicking the backdrop (but not the card)
     backdrop.addEventListener("click", (e) => {
       if (e.target === backdrop) cleanup();
     });
 
-    label.appendChild(input);
-    backdrop.appendChild(label);
+    card.appendChild(closeBtn);
+    card.appendChild(text);
+    card.appendChild(btn);
+    card.appendChild(input);
+    backdrop.appendChild(card);
     document.body.appendChild(backdrop);
     console.log("[Image Overlay] File picker shown");
   }

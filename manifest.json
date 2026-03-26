@@ -1,22 +1,25 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Image Overlay",
   "version": "1.0",
   "description": "Overlay an image on any webpage — drag, resize, adjust opacity, and remove via context menu.",
   "icons": {
-    "48": "icons/icon-48.svg"
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
   },
   "permissions": [
     "activeTab",
     "contextMenus",
-    "storage"
+    "storage",
+    "scripting"
   ],
-  "browser_action": {
-    "default_icon": "icons/icon-48.svg",
+  "action": {
+    "default_icon": "icons/icon-48.png",
     "default_popup": "popup/popup.html"
   },
   "background": {
-    "scripts": ["browser-polyfill.min.js", "background.js"]
+    "scripts": ["browser-polyfill.min.js", "background.js"],
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {

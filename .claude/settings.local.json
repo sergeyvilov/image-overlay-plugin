@@ -3,7 +3,12 @@
     "allow": [
       "Bash(grep -E '\\\\.\\(md|txt|json|yaml|yml\\)$')",
       "Bash(wc:*)",
-      "Bash(grep -r \"display\\\\|render\\\\|canvas\\\\|webgl\\\\|img\\\\|image\" /Users/sergeyvilov/Documents/image-plugin --include=*.js --include=*.css -n)"
+      "Bash(grep -r \"display\\\\|render\\\\|canvas\\\\|webgl\\\\|img\\\\|image\" /Users/sergeyvilov/Documents/image-plugin --include=*.js --include=*.css -n)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(curl:*)",
+      "Bash(python3 -c \"import cairosvg; print\\(''ok''\\)\")",
+      "Bash(python3 -c \"from PIL import Image; print\\(''pillow ok''\\)\")"
     ]
   }
 }
